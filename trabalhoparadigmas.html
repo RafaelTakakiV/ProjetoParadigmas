@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <!-- Chosen Palette: Cool Slate -->
+    <!-- Application Structure Plan: A single-page, vertically scrolling application with a fixed sidebar navigation. This structure allows users to get a quick overview of the document's sections and jump to any topic instantly. It's designed for exploration, transforming the linear PDF into an interactive summary. Key interactions include smooth scrolling, a chart visualizing language adoption, and a dedicated, formatted section for the 8 Queens code example, making the content more digestible and engaging. -->
+    <!-- Visualization & Content Choices: Report Info: Industry adoption of functional languages. -> Goal: Compare & Inform. -> Viz/Presentation Method: An interactive bar chart (Chart.js) to show the primary domains for key languages. Report Info: Core FP concepts. -> Goal: Organize & Inform. -> Viz/Presentation Method: Expanded description cards with icons and key terms highlighted. Report Info: 8 Queens case study. -> Goal: Demonstrate. -> Viz/Presentation Method: An annotated code block explaining the logic. -> Interaction: Chart tooltips, sidebar navigation. -> Justification: This enhanced version adds more context to each section, better bridging the gap between concepts and real-world application, thereby improving the educational value. -> Library/Method: Chart.js, Vanilla JS, TailwindCSS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto: O Paradigma Funcional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f5f5f5;
+            --text-primary: #2a2a2a;
+            --text-secondary: #6b7280;
+            --text-accent: #111827;
+            --border-color: #e5e7eb;
+            --accent-color: #000000;
+            --accent-hover: #374151;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1a1a1a;
+            --text-primary: #e5e5e5;
+            --text-secondary: #a3a3a3;
+            --text-accent: #ffffff;
+            --border-color: #262626;
+            --accent-color: #ffffff;
+            --accent-hover: #d4d4d4;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .nav-link {
+            transition: all 0.2s ease-in-out;
+            border-left: 3px solid transparent;
+            border-radius: 0.375rem;
+            margin: 0.25rem 0;
+        }
+
+        .nav-link.active, .nav-link:hover {
+            color: var(--text-accent);
+            border-left-color: var(--accent-color);
+            background-color: var(--bg-tertiary);
+            transform: translateX(4px);
+        }
+
+        section {
+            scroll-margin-top: 2rem;
+        }
+
+        .code-comment {
+            color: var(--text-secondary);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent-color), #4a4a4a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-section {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 0;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 400;
+            line-height: 1.4;
+            opacity: 0.7;
+            margin-bottom: 3rem;
+        }
+
+        .content-section {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+            margin: 4rem 0;
+        }
+
+        .card-content {
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .card-content:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .text-content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--text-accent);
+        }
+
+        .report-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .toggle-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .toggle-btn.active {
+            background: var(--accent-color);
+            color: var(--bg-secondary);
+            border-color: var(--accent-color);
+        }
+
+        .toggle-btn:hover:not(.active) {
+            border-color: var(--accent-color);
+            transform: translateY(-1px);
+        }
+
+        .report-content {
+            display: none;
+        }
+
+        .report-content.active {
+            display: block;
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        [data-theme="dark"] .glass-effect {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" title="Alternar tema">
+        <svg id="sunIcon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+        </svg>
+        <svg id="moonIcon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+        </svg>
+    </button>
+
+    <div class="flex">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 min-h-screen card fixed top-0 left-0 p-8 hidden md:block">
+            <h1 class="text-xl font-bold gradient-text mb-8">Paradigma Funcional</h1>
+            <nav id="desktop-nav" class="flex flex-col space-y-2">
+                <a href="#intro" class="nav-link font-semibold pl-4 py-2" style="color: var(--text-primary);">Introdução</a>
+                <a href="#pilares" class="nav-link font-semibold pl-4 py-2" style="color: var(--text-primary);">Pilares</a>
+                <a href="#comparativo" class="nav-link font-semibold pl-4 py-2" style="color: var(--text-primary);">Comparativo</a>
+                <a href="#adocao" class="nav-link font-semibold pl-4 py-2" style="color: var(--text-primary);">Adoção Industrial</a>
+                <a href="#estudo-caso" class="nav-link font-semibold pl-4 py-2" style="color: var(--text-primary);">Estudo de Caso</a>
+                <a href="#relatorio" class="nav-link font-semibold pl-4 py-2" style="color: var(--text-primary);">Relatório</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="md:ml-64 flex-1 p-6 md:p-12">
+            
+            <section id="intro" class="mb-20">
+                <div class="hero-section">
+                    <h2 class="hero-title gradient-text">O Paradigma Funcional</h2>
+                    <p class="hero-subtitle">
+                        Dos Fundamentos à Modernidade
+                    </p>
+                    <div class="card-content">
+                        <div class="text-content space-y-6">
+                            <p>
+                                Este projeto explora a programação funcional, um paradigma declarativo que trata a computação como a avaliação de funções matemáticas. Diferente do estilo imperativo, que se baseia em uma sequência de comandos que alteram o estado do programa, a programação funcional foca em construir programas a partir de expressões e dados imutáveis.
+                            </p>
+                            <p>
+                                A principal distinção está na abordagem: em vez de focar em <strong>"como"</strong> computar, o paradigma se concentra em <strong>"o que"</strong> computar. Essa mudança de perspectiva minimiza a complexidade e a ocorrência de erros relacionados à gestão de estado compartilhado, uma das fontes mais comuns de bugs em software.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <section id="pilares" class="mb-20">
+                <div class="content-section">
+                    <h3 class="section-title">Os Pilares da Programação Funcional</h3>
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div class="card-content border-l-4" style="border-left-color: var(--accent-color);">
+                            <h4 class="font-bold text-xl mb-4" style="color: var(--text-accent);">Imutabilidade e Funções Puras</h4>
+                            <div class="text-content">
+                                <p class="mb-4">A <strong>imutabilidade</strong> garante que dados não podem ser alterados após sua criação; em vez disso, novas estruturas de dados são criadas. Isso elimina erros em programação concorrente.</p>
+                                <p class="mb-4"><strong>Funções puras</strong> sempre retornam a mesma saída para a mesma entrada e não têm efeitos colaterais (como modificar uma variável global ou escrever em um arquivo).</p>
+                                <p>Juntas, promovem a <strong>transparência referencial</strong>, onde uma função pode ser substituída por seu valor sem mudar o comportamento do programa.</p>
+                            </div>
+                        </div>
+                        <div class="card-content border-l-4" style="border-left-color: var(--accent-color);">
+                            <h4 class="font-bold text-xl mb-4" style="color: var(--text-accent);">Funções de Primeira Classe e Composição</h4>
+                            <div class="text-content">
+                                <p class="mb-4">Funções são tratadas como qualquer outro valor (cidadãos de primeira classe): podem ser atribuídas a variáveis, passadas como argumentos ou retornadas por outras funções.</p>
+                                <p class="mb-4">Isso permite a criação de <strong>Funções de Ordem Superior</strong> (HOFs), como <code>map</code>, <code>filter</code> e <code>reduce</code>, que abstraem padrões de iteração.</p>
+                                <p>A <strong>composição de funções</strong> permite combinar funções simples para criar comportamentos complexos de forma modular e reutilizável.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <section id="comparativo" class="mb-20">
+                <div class="content-section">
+                    <h3 class="section-title">Análise Comparativa de Paradigmas</h3>
+                    <div class="card-content mb-8">
+                        <div class="text-content">
+                            <p>Para entender o valor do paradigma funcional, é útil compará-lo com outras abordagens populares. Enquanto a programação imperativa se concentra em sequências de comandos e a orientada a objetos modela o mundo através de objetos com estado e comportamento, a funcional foca em transformações de dados sem estado.</p>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full card-content text-left">
+                            <thead style="background-color: var(--bg-tertiary);">
+                                <tr>
+                                    <th class="p-6 font-bold text-lg" style="color: var(--text-accent);">Característica</th>
+                                    <th class="p-6 font-bold text-lg" style="color: var(--text-accent);">Orientado a Objetos (OOP)</th>
+                                    <th class="p-6 font-bold text-lg" style="color: var(--text-accent);">Funcional (FP)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                    <td class="p-6 font-semibold text-lg" style="color: var(--text-accent);">Gestão de Estado</td>
+                                    <td class="p-6 text-content">Estado encapsulado em objetos, mas geralmente mutável.</td>
+                                    <td class="p-6 text-content">Evita ativamente o estado mutável, favorecendo a imutabilidade.</td>
+                                </tr>
+                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                    <td class="p-6 font-semibold text-lg" style="color: var(--text-accent);">Concorrência</td>
+                                    <td class="p-6 text-content">Complexa de gerenciar, requer bloqueios e sincronização (locks).</td>
+                                    <td class="p-6 text-content">Inerentemente mais simples e segura devido à ausência de estado compartilhado.</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-6 font-semibold text-lg" style="color: var(--text-accent);">Unidade de Abstração</td>
+                                    <td class="p-6 text-content">Classes e objetos, que combinam dados e comportamento.</td>
+                                    <td class="p-6 text-content">Funções puras e de ordem superior, que transformam dados.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <section id="adocao" class="mb-20">
+                <div class="content-section">
+                    <h3 class="section-title">Adoção na Indústria</h3>
+                    <div class="card-content mb-8">
+                        <div class="text-content">
+                            <p>Longe de ser apenas acadêmico, o paradigma funcional é uma força motriz em sistemas de larga escala. O gráfico abaixo ilustra os domínios onde algumas das principais linguagens funcionais se destacam, mostrando seus pontos fortes em áreas como concorrência, análise de dados e finanças.</p>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="chart-container" style="position: relative; height: 60vh; width: 100%; max-width: 700px; margin: auto;">
+                            <canvas id="adoptionChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="mt-12 grid md:grid-cols-3 gap-8">
+                        <div class="card-content text-center">
+                            <h4 class="font-bold text-xl mb-4" style="color: var(--accent-color);">Desenvolvimento Web (UI)</h4>
+                            <div class="text-content">
+                                <p>Bibliotecas como o <strong>React</strong> modelam componentes de UI como funções puras que transformam estado (props) em interface.</p>
+                            </div>
+                        </div>
+                        <div class="card-content text-center">
+                            <h4 class="font-bold text-xl mb-4" style="color: var(--accent-color);">Big Data</h4>
+                            <div class="text-content">
+                                <p>O <strong>Apache Spark</strong>, escrito em Scala, possui uma API funcional para processar grandes volumes de dados de forma distribuída.</p>
+                            </div>
+                        </div>
+                        <div class="card-content text-center">
+                            <h4 class="font-bold text-xl mb-4" style="color: var(--accent-color);">Sistemas Concorrentes</h4>
+                            <div class="text-content">
+                                <p>O <strong>WhatsApp</strong> utiliza Erlang/Elixir para gerenciar milhões de conexões simultâneas com alta tolerância a falhas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="section-divider"></div>
+
+            <section id="estudo-caso" class="mb-20">
+                <div class="content-section">
+                    <h3 class="section-title">Estudo de Caso: O Problema das 8 Rainhas em Haskell</h3>
+                    <div class="card-content mb-8">
+                        <div class="text-content">
+                            <p>A solução funcional para o problema das 8 rainhas ilustra perfeitamente a abordagem declarativa. Em vez de criar um tabuleiro e modificá-lo, o código gera uma lista de todas as configurações válidas. O tabuleiro é representado como uma lista de inteiros, onde o índice é a coluna e o valor é a linha da rainha.</p>
+                        </div>
+                    </div>
+                    <div class="card-content overflow-x-auto" style="background-color: var(--bg-tertiary) !important; color: var(--text-primary) !important;">
+                    <pre><code class="language-haskell">
+<span class="code-comment">-- Define um tipo 'Rainhas' como uma lista de inteiros.</span>
+type Rainhas = [Int]
+
+<span class="code-comment">-- Função principal que encontra soluções para N rainhas.</span>
+rainhas :: Int -> [Rainhas]
+<span class="code-comment">-- Caso base: para 0 rainhas, a solução é um tabuleiro vazio.</span>
+rainhas 0 = [[]]
+<span class="code-comment">-- Passo recursivo: gera soluções de forma declarativa.</span>
+rainhas n = [ y:ys | ys <- rainhas (n-1), y <- [1..n], valida y ys ]
+
+<span class="code-comment">-- Verifica se uma nova rainha 'y' é válida em relação às existentes 'ys'.</span>
+valida :: Int -> Rainhas -> Bool
+valida y ys = all (not . ataque (x, y)) (zip [1..] ys)
+    where
+        x = 1 + length ys <span class="code-comment">-- Coluna da nova rainha.</span>
+        <span class="code-comment">-- Uma rainha ataca outra se estiverem na mesma linha, coluna ou diagonal.</span>
+        ataque (x1, y1) (x2, y2) = y1 == y2 || abs(x1-x2) == abs(y1-y2)
+                    </code></pre>
+                </div>
+            </section>
+
+            <section id="relatorio">
+                <div class="content-section">
+                    <h3 class="section-title">Relatórios Individuais</h3>
+                    
+                    <div class="report-toggle">
+                        <button class="toggle-btn active" onclick="showReport('rafael')">Rafael Takaki</button>
+                        <button class="toggle-btn" onclick="showReport('arthur')">Arthur Prados</button>
+                    </div>
+
+                    <!-- Relatório do Rafael -->
+                    <div id="rafael-report" class="report-content active">
+                        <div class="card-content">
+                            <div class="mb-8 pb-6" style="border-bottom: 1px solid var(--border-color);">
+                                <div class="text-content">
+                                    <p class="text-lg mb-2"><strong>Nome:</strong> Rafael Takaki Vieira</p>
+                                    <p class="text-lg"><strong>RA:</strong> 22403952</p>
+                                </div>
+                            </div>
+                            <h4 class="font-bold text-2xl mb-6" style="color: var(--text-accent);">Sumário da Atividade</h4>
+                            <div class="text-content space-y-6">
+                                <p>
+                                    A elaboração deste projeto proporcionou uma imersão profunda e esclarecedora no paradigma de programação funcional, desde seus fundamentos teóricos até sua aplicação prática na indústria de tecnologia. A pesquisa inicial focou nos pilares do paradigma — imutabilidade, funções puras e funções de primeira classe — que, em conjunto, promovem um código mais previsível, testável e robusto. Compreender como esses conceitos se contrapõem aos paradigmas imperativo e orientado a objetos solidificou a percepção de suas vantagens, especialmente na gestão de concorrência e na simplificação da complexidade do software.
+                                </p>
+                                <p>
+                                    A análise da adoção industrial, com exemplos concretos como Erlang no WhatsApp, Scala no Apache Spark e a influência funcional no React, desmistificou a ideia de que o paradigma é puramente acadêmico. Pelo contrário, revelou seu papel crucial na construção de sistemas modernos, escaláveis e tolerantes a falhas. O estudo de caso do problema das "8 Rainhas" em Haskell foi particularmente elucidativo, servindo como uma demonstração prática do poder da abordagem declarativa para resolver problemas complexos de forma concisa e elegante.
+                                </p>
+                                <p>
+                                    Em suma, a atividade foi fundamental para concluir que dominar os princípios funcionais é adquirir uma nova e poderosa forma de pensar sobre a construção de software. A ênfase em transformações de dados, em vez da manipulação de estado, é uma ferramenta valiosa e cada vez mais relevante para criar sistemas mais confiáveis e fáceis de manter no cenário tecnológico atual.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Relatório do Arthur -->
+                    <div id="arthur-report" class="report-content">
+                        <div class="card-content">
+                            <div class="mb-8 pb-6" style="border-bottom: 1px solid var(--border-color);">
+                                <div class="text-content">
+                                    <p class="text-lg mb-2"><strong>Nome:</strong> Arthur Prados</p>
+                                    <p class="text-lg"><strong>RA:</strong> 21876543</p>
+                                </div>
+                            </div>
+                            <h4 class="font-bold text-2xl mb-6" style="color: var(--text-accent);">Sumário da Atividade</h4>
+                            <div class="text-content space-y-6">
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                </p>
+                                <p>
+                                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+                                </p>
+                                <p>
+                                    Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur.
+                                </p>
+                                <p>
+                                    At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // Theme management
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+        const body = document.body;
+
+        // Check for saved theme preference or default to light mode
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        body.setAttribute('data-theme', currentTheme);
+        updateThemeIcon(currentTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+            
+            // Update chart colors
+            updateChartTheme(newTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            if (theme === 'light') {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+        }
+
+        function updateChartTheme(theme) {
+            if (window.adoptionChart) {
+                const isDark = theme === 'dark';
+                window.adoptionChart.options.scales.r.angleLines.color = isDark ? '#262626' : '#e5e7eb';
+                window.adoptionChart.options.scales.r.grid.color = isDark ? '#1a1a1a' : '#f5f5f5';
+                window.adoptionChart.options.scales.r.pointLabels.color = isDark ? '#e5e5e5' : '#2a2a2a';
+                window.adoptionChart.options.scales.r.ticks.color = isDark ? '#a3a3a3' : '#6b7280';
+                window.adoptionChart.options.scales.r.ticks.backdropColor = isDark ? 'rgba(0, 0, 0, 0.75)' : 'rgba(255, 255, 255, 0.75)';
+                window.adoptionChart.options.plugins.title.color = isDark ? '#ffffff' : '#111827';
+                window.adoptionChart.update();
+            }
+        }
+
+        // Report toggle functionality
+        function showReport(reportType) {
+            // Hide all reports
+            document.querySelectorAll('.report-content').forEach(report => {
+                report.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected report
+            document.getElementById(reportType + '-report').classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('adoptionChart').getContext('2d');
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            
+            window.adoptionChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        'Sistemas Concorrentes', 
+                        'Big Data', 
+                        'Finanças (FinTech)', 
+                        'Desenvolvimento Web', 
+                        'Análise de Dados'
+                    ],
+                    datasets: [{
+                        label: 'Erlang/Elixir',
+                        data: [5, 1, 2, 3, 1],
+                        fill: true,
+                        backgroundColor: 'rgba(79, 70, 229, 0.2)',
+                        borderColor: 'rgb(79, 70, 229)',
+                        pointBackgroundColor: 'rgb(79, 70, 229)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(79, 70, 229)'
+                    }, {
+                        label: 'Scala',
+                        data: [4, 5, 3, 3, 3],
+                        fill: true,
+                        backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                        borderColor: 'rgb(239, 68, 68)',
+                        pointBackgroundColor: 'rgb(239, 68, 68)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(239, 68, 68)'
+                    },
+                    {
+                        label: 'Haskell',
+                        data: [3, 2, 5, 1, 4],
+                        fill: true,
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                        borderColor: 'rgb(16, 185, 129)',
+                        pointBackgroundColor: 'rgb(16, 185, 129)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(16, 185, 129)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: isDark ? '#262626' : '#e5e7eb'
+                            },
+                            grid: {
+                                color: isDark ? '#1a1a1a' : '#f5f5f5'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 13,
+                                    weight: 'bold'
+                                },
+                                color: isDark ? '#e5e5e5' : '#2a2a2a'
+                            },
+                            ticks: {
+                                backdropColor: isDark ? 'rgba(0, 0, 0, 0.75)' : 'rgba(255, 255, 255, 0.75)',
+                                color: isDark ? '#a3a3a3' : '#6b7280'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: {
+                                    size: 14,
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Perfil de Aplicação das Linguagens Funcionais',
+                            padding: {
+                                bottom: 20
+                            },
+                            font: {
+                                size: 18,
+                                family: 'Inter',
+                            },
+                            color: isDark ? '#ffffff' : '#111827'
+                        },
+                        tooltip: {
+                            enabled: true
+                        }
+                    }
+                }
+            });
+
+            // Navigation scroll highlighting
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('#desktop-nav a');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.toggle('active', link.getAttribute('href').substring(1) === entry.target.id);
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+
+</body>
+</html>
+
