@@ -258,7 +258,7 @@
                     <div class="card-content">
                         <div class="text-content space-y-6">
                             <p>
-                                Este projeto explora a programação funcional, um paradigma declarativo que trata a computação como a avaliação de funções matemáticas. Diferente do estilo imperativo, que se baseia em uma sequência de comandos que alteram o estado do programa, a programação funcional foca em construir programas a partir de expressões e dados imutáveis.
+                                Este projeto explora a programação funcional,  que trata a computação como a avaliação de funções matemáticas. Diferente do estilo imperativo, que se baseia em uma sequência de comandos que alteram o estado do programa, a programação funcional foca em construir programas a partir de expressões e dados imutáveis.
                             </p>
                             <p>
                                 A principal distinção está na abordagem: em vez de focar em <strong>"como"</strong> computar, o paradigma se concentra em <strong>"o que"</strong> computar. Essa mudança de perspectiva minimiza a complexidade e a ocorrência de erros relacionados à gestão de estado compartilhado, uma das fontes mais comuns de bugs em software.
@@ -426,19 +426,21 @@ valida y ys = all (not . ataque (x, y)) (zip [1..] ys)
                             <h4 class="font-bold text-2xl mb-6" style="color: var(--text-accent);">Sumário da Atividade</h4>
                             <div class="text-content space-y-6">
                                 <p>
-                                    A elaboração deste projeto proporcionou uma imersão profunda e esclarecedora no paradigma de programação funcional, desde seus fundamentos teóricos até sua aplicação prática na indústria de tecnologia. A pesquisa inicial focou nos pilares do paradigma — imutabilidade, funções puras e funções de primeira classe — que, em conjunto, promovem um código mais previsível, testável e robusto. Compreender como esses conceitos se contrapõem aos paradigmas imperativo e orientado a objetos solidificou a percepção de suas vantagens, especialmente na gestão de concorrência e na simplificação da complexidade do software.
+                                    A elaboração deste projeto proporcionou uma imersão profunda no paradigma de programação funcional, desde seus fundamentos teóricos até sua aplicação prática na indústria. A pesquisa focou nos pilares do paradigma, a imutabilidade, funções puras e funções de primeira classe, que, em conjunto, promovem um código mais previsível e robusto ao eliminar efeitos colaterais. Compreender que o paradigma funcional funciona com base no "o que" fazer, em contraste com o detalhamento do "como" do imperativo, solidificou a minha percepção de suas vantagens. Em particular, a ausência de estado compartilhado mutável simplifica a gestão de concorrência, pois elimina classes inteiras de erros, como condições de corrida (race conditions), sem a necessidade de mecanismos complexos de bloqueio.
                                 </p>
                                 <p>
-                                    A análise da adoção industrial, com exemplos concretos como Erlang no WhatsApp, Scala no Apache Spark e a influência funcional no React, desmistificou a ideia de que o paradigma é puramente acadêmico. Pelo contrário, revelou seu papel crucial na construção de sistemas modernos, escaláveis e tolerantes a falhas. O estudo de caso do problema das "8 Rainhas" em Haskell foi particularmente elucidativo, servindo como uma demonstração prática do poder da abordagem declarativa para resolver problemas complexos de forma concisa e elegante.
+                                    A análise de conceitos como map e filter em linguagens como Haskell e Scheme, e a observação de sua influência em outras áreas, revelou a ideia de que o paradigma funcional não é puramente acadêmico. Pelo contrário, exemplos como Erlang no WhatsApp, que utiliza a tolerância a falhas inerente ao modelo para gerenciar milhões de conexões, revelou seu papel crucial na construção de sistemas modernos e escaláveis. 
                                 </p>
                                 <p>
-                                    Em suma, a atividade foi fundamental para concluir que dominar os princípios funcionais é adquirir uma nova e poderosa forma de pensar sobre a construção de software. A ênfase em transformações de dados, em vez da manipulação de estado, é uma ferramenta valiosa e cada vez mais relevante para criar sistemas mais confiáveis e fáceis de manter no cenário tecnológico atual.
+                                    O estudo de caso das "8 Rainhas" em Haskell foi particularmente esclarecedor, servindo como uma demonstração prática do poder da abordagem declarativa que, em vez de um tabuleiro cujo estado é modificado passo a passo, a solução é gerada pela composição de regras que filtram recursivamente as configurações possíveis
                                 </p>
+                                <p>
+                                    Em suma, a atividade foi fundamental para concluir que internalizar os princípios funcionais é adquirir um novo modelo mental para a construção de software, um que prioriza a clareza e a corretude. A construção de operações complexas através do encadeamento de funções simples e puras, em vez da manipulação de estado, é uma ferramenta valiosa. Essa abordagem torna-se cada vez mais relevante para criar sistemas confiáveis e de fácil manutenção no cenário tecnológico atual, dominado por sistemas distribuídos e processadores multi-core, onde o controle do estado é o maior desafio.
                             </div>
                         </div>
                     </div>
 
-                    <div id="arthur-report" class="report-content active">
+                    <div id="arthur-report" class="report-content">
                         <div class="card-content">
                             <div class="mb-8 pb-6" style="border-bottom: 1px solid var(--border-color);">
                                 <div class="text-content">
@@ -449,16 +451,16 @@ valida y ys = all (not . ataque (x, y)) (zip [1..] ys)
                             <h4 class="font-bold text-2xl mb-6" style="color: var(--text-accent);">Sumário da Atividade</h4>
                             <div class="text-content space-y-6">
                                 <p>
-                                    O desenvolvimento desta atividade proporcionou uma compreensão aprofundada do paradigma de programação funcional e sua relevância no cenário contemporâneo de desenvolvimento de software. A análise dos conceitos centrais — como funções puras, imutabilidade e composição de funções — mostrou como eles contribuem para a criação de aplicações mais previsíveis, seguras e fáceis de manter.
+                                    O desenvolvimento desta atividade proporcionou uma compreensão aprofundada do paradigma de programação funcional e sua relevância no cenário contemporâneo de desenvolvimento de software. A análise dos conceitos centrais como funções puras, imutabilidade e composição de funções mostrou como eles contribuem para a criação de aplicações mais previsíveis, seguras e fáceis de manter.
                                 </p>
                                 <p>
                                     Ao comparar o paradigma funcional com os modelos imperativo e orientado a objetos, foi possível perceber como a eliminação da mutabilidade e do estado compartilhado simplifica a resolução de problemas relacionados à concorrência e paralelismo. Além disso, a abordagem declarativa favorece uma forma mais clara e elegante de estruturar soluções complexas.
                                 </p>
                                 <p>
-                                    A exploração de exemplos reais de uso do paradigma funcional, como o papel de Erlang em sistemas distribuídos, Scala no ecossistema de big data e a influência funcional no React, evidenciou que este paradigma vai além da teoria acadêmica e já é uma base prática para tecnologias amplamente utilizadas.
+                                    A exploração de exemplos reais de uso do paradigma funcional, como o papel de Erlang em sistemas distribuídos, Scala no ecossistema de big data e a influência funcional no React, mostrou que este paradigma vai além da teoria acadêmica e já é uma base prática para tecnologias amplamente utilizadas.
                                 </p>
                                 <p>
-                                    Em conclusão, esta atividade demonstrou que dominar os princípios da programação funcional é mais do que aprender uma nova sintaxe: é adotar uma nova forma de pensar sobre software. Essa mudança de perspectiva amplia a capacidade de projetar sistemas mais robustos, escaláveis e alinhados com as demandas do mercado atual.
+                                    Em conclusão, esta atividade demonstrou para mim, que dominar os princípios da programação funcional é mais do que aprender uma nova sintaxe, é adotar uma nova forma de pensar sobre software. Essa mudança de perspectiva amplia a capacidade de projetar sistemas mais robustos, escaláveis e alinhados com as demandas do mercado atual.
                                 </p>
                             </div>
                         </div>
