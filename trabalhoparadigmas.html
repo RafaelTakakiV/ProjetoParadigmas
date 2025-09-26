@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR" class="scroll-smooth">
 <head>
-    <!-- Chosen Palette: Cool Slate -->
-    <!-- Application Structure Plan: A single-page, vertically scrolling application with a fixed sidebar navigation. This structure allows users to get a quick overview of the document's sections and jump to any topic instantly. It's designed for exploration, transforming the linear PDF into an interactive summary. Key interactions include smooth scrolling, a chart visualizing language adoption, and a dedicated, formatted section for the 8 Queens code example, making the content more digestible and engaging. -->
-    <!-- Visualization & Content Choices: Report Info: Industry adoption of functional languages. -> Goal: Compare & Inform. -> Viz/Presentation Method: An interactive bar chart (Chart.js) to show the primary domains for key languages. Report Info: Core FP concepts. -> Goal: Organize & Inform. -> Viz/Presentation Method: Expanded description cards with icons and key terms highlighted. Report Info: 8 Queens case study. -> Goal: Demonstrate. -> Viz/Presentation Method: An annotated code block explaining the logic. -> Interaction: Chart tooltips, sidebar navigation. -> Justification: This enhanced version adds more context to each section, better bridging the gap between concepts and real-world application, thereby improving the educational value. -> Library/Method: Chart.js, Vanilla JS, TailwindCSS. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projeto: O Paradigma Funcional</title>
@@ -229,7 +225,6 @@
 </head>
 <body>
 
-    <!-- Theme Toggle Button -->
     <button class="theme-toggle" id="themeToggle" title="Alternar tema">
         <svg id="sunIcon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
@@ -240,7 +235,6 @@
     </button>
 
     <div class="flex">
-        <!-- Sidebar Navigation -->
         <aside class="w-64 min-h-screen card fixed top-0 left-0 p-8 hidden md:block">
             <h1 class="text-xl font-bold gradient-text mb-8">Paradigma Funcional</h1>
             <nav id="desktop-nav" class="flex flex-col space-y-2">
@@ -253,7 +247,6 @@
             </nav>
         </aside>
 
-        <!-- Main Content -->
         <main class="md:ml-64 flex-1 p-6 md:p-12">
             
             <section id="intro" class="mb-20">
@@ -422,7 +415,6 @@ valida y ys = all (not . ataque (x, y)) (zip [1..] ys)
                         <button class="toggle-btn" onclick="showReport('arthur')">Arthur Prados</button>
                     </div>
 
-                    <!-- Relatório do Rafael -->
                     <div id="rafael-report" class="report-content active">
                         <div class="card-content">
                             <div class="mb-8 pb-6" style="border-bottom: 1px solid var(--border-color);">
@@ -446,28 +438,27 @@ valida y ys = all (not . ataque (x, y)) (zip [1..] ys)
                         </div>
                     </div>
 
-                    <!-- Relatório do Arthur -->
-                    <div id="arthur-report" class="report-content">
+                    <div id="arthur-report" class="report-content active">
                         <div class="card-content">
                             <div class="mb-8 pb-6" style="border-bottom: 1px solid var(--border-color);">
                                 <div class="text-content">
                                     <p class="text-lg mb-2"><strong>Nome:</strong> Arthur Prados</p>
-                                    <p class="text-lg"><strong>RA:</strong> 21876543</p>
+                                    <p class="text-lg"><strong>RA:</strong> 22400700</p>
                                 </div>
                             </div>
                             <h4 class="font-bold text-2xl mb-6" style="color: var(--text-accent);">Sumário da Atividade</h4>
                             <div class="text-content space-y-6">
                                 <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    O desenvolvimento desta atividade proporcionou uma compreensão aprofundada do paradigma de programação funcional e sua relevância no cenário contemporâneo de desenvolvimento de software. A análise dos conceitos centrais — como funções puras, imutabilidade e composição de funções — mostrou como eles contribuem para a criação de aplicações mais previsíveis, seguras e fáceis de manter.
                                 </p>
                                 <p>
-                                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+                                    Ao comparar o paradigma funcional com os modelos imperativo e orientado a objetos, foi possível perceber como a eliminação da mutabilidade e do estado compartilhado simplifica a resolução de problemas relacionados à concorrência e paralelismo. Além disso, a abordagem declarativa favorece uma forma mais clara e elegante de estruturar soluções complexas.
                                 </p>
                                 <p>
-                                    Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur.
+                                    A exploração de exemplos reais de uso do paradigma funcional, como o papel de Erlang em sistemas distribuídos, Scala no ecossistema de big data e a influência funcional no React, evidenciou que este paradigma vai além da teoria acadêmica e já é uma base prática para tecnologias amplamente utilizadas.
                                 </p>
                                 <p>
-                                    At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.
+                                    Em conclusão, esta atividade demonstrou que dominar os princípios da programação funcional é mais do que aprender uma nova sintaxe: é adotar uma nova forma de pensar sobre software. Essa mudança de perspectiva amplia a capacidade de projetar sistemas mais robustos, escaláveis e alinhados com as demandas do mercado atual.
                                 </p>
                             </div>
                         </div>
@@ -479,13 +470,11 @@ valida y ys = all (not . ataque (x, y)) (zip [1..] ys)
     </div>
 
     <script>
-        // Theme management
         const themeToggle = document.getElementById('themeToggle');
         const sunIcon = document.getElementById('sunIcon');
         const moonIcon = document.getElementById('moonIcon');
         const body = document.body;
 
-        // Check for saved theme preference or default to light mode
         const currentTheme = localStorage.getItem('theme') || 'light';
         body.setAttribute('data-theme', currentTheme);
         updateThemeIcon(currentTheme);
@@ -525,22 +514,17 @@ valida y ys = all (not . ataque (x, y)) (zip [1..] ys)
             }
         }
 
-        // Report toggle functionality
         function showReport(reportType) {
-            // Hide all reports
             document.querySelectorAll('.report-content').forEach(report => {
                 report.classList.remove('active');
             });
             
-            // Remove active class from all buttons
             document.querySelectorAll('.toggle-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             
-            // Show selected report
             document.getElementById(reportType + '-report').classList.add('active');
             
-            // Add active class to clicked button
             event.target.classList.add('active');
         }
 
@@ -644,7 +628,6 @@ valida y ys = all (not . ataque (x, y)) (zip [1..] ys)
                 }
             });
 
-            // Navigation scroll highlighting
             const sections = document.querySelectorAll('section');
             const navLinks = document.querySelectorAll('#desktop-nav a');
             
